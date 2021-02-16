@@ -37,6 +37,22 @@
         .append("g")
         .attr("transform","translate("+ margin.left + ","+margin.top+")");
 
+    // var tooltip = d3.select('body').append('div')
+    //     .attr("id", "tooltip")
+    //     .style("opacity",0)
+
+    var body = d3.select('body');
+
+    var tooltip = body
+        .append('div')
+        .attr('class', 'tooltip')
+        .attr('id', 'tooltip')
+        .style('opacity', 0);
+
+    // d3.select('body').append('div')
+    //   .attr('id','tooltip')
+    //   .attr('style','position:absolute; opacity: 0;')
+
     d3.json("https://cdn.freecodecamp.org/testable-projects-fcc/data/tree_map/video-game-sales-data.json",function(data) {
 
         var root = d3.hierarchy(data).sum(function(d){return d.value})
@@ -109,6 +125,20 @@
               .attr("data-name",d=>d.data.name)
               .attr("data-category",d=>d.data.category)
               .attr("data-value",d=>d.data.value)
+              .on('mouseover',function(d,i) {
+                    tooltip.transition()
+                    .style('opacity',1)
+                    .attr("data-value", d.data.value)
+                    .html("helloooooo")
+                    .style('left', d3.event.pageX + 10 + 'px')
+                    .style('top',d3.event.pageY - 28 + 'px');
+                    
+              })
+              .on('mouseout',d=> {
+                tooltip.transition()
+                .style('opacity',0)
+                        
+              })
 
             svg
                 .selectAll("text")
@@ -120,6 +150,21 @@
                   .text(d=>d.data.name)
                   .attr("font-size","15px")
                   .attr("fill","white")
+
+            dataLegend = [{temp:5},{temp:15},{temp:25},{temp:35},{temp:45},{temp:55}]
+           
+          svg.append('g')
+            .attr('id','legend')
+            .selectAll('rect')
+            .data(dataLegend)
+            .enter()
+            .append("rect")
+            .attr('x',(d,i)=>100+(i*30))
+            .attr('y',height-50)
+            .attr('fill',d=>{return color(d.temp)})
+            .attr('height',30)
+            .attr('width',30)
+            .attr('stroke','black')
 
     })
     
