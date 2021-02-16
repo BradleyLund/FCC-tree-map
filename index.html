@@ -28,8 +28,8 @@
       .attr('style','position:absolute; opacity: 0;')
 
     var margin = {top: 10, right:10,bottom:10,left: 10},
-        width =445 -margin.left - margin.right,
-        height = 445 - margin.top - margin.bottom;
+        width =1400 -margin.left - margin.right,
+        height = 900 - margin.top - margin.bottom;
     
     var svg = d3.select("body").append("svg")
         .attr("width", width + margin.left + margin.right)
@@ -37,9 +37,57 @@
         .append("g")
         .attr("transform","translate("+ margin.left + ","+margin.top+")");
 
-    d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/data_dendrogram_full.json",function(data) {
+    d3.json("https://cdn.freecodecamp.org/testable-projects-fcc/data/tree_map/video-game-sales-data.json",function(data) {
 
         var root = d3.hierarchy(data).sum(function(d){return d.value})
+       
+        console.log(root)
+
+        const fillfunction = (d) => {
+            //do a where clause for the different sections and return the different colors
+            console.log(d.data.category)
+            switch (d.data.category) {
+                case '2600':
+                    return '#b03333'
+                case 'Wii':   
+                    return '#ffc800'
+                case 'NES':
+                    return '#eaff00'
+                case 'GB':
+                    return '#55ff00'
+                case 'DS':
+                    return '#11ed32'
+                case 'X360':
+                    return '#00ff91'
+                case 'PS3':
+                    return '#00ffee'
+                case 'PS2':
+                    return '#00bfff'
+                case 'SNES':
+                    return '#0040ff'
+                case 'GBA':
+                    return '#7700ff'
+                case 'PS4':
+                    return '#511370'
+                case 'DS':
+                    return '#ca69d1'
+                case 'N64':
+                    return '#ff00d0'
+                case 'PS':
+                    return '#9c2868'
+                case 'XB':
+                    return '#000099'
+                case 'PC':
+                    return '#003300'
+                case 'PSP':
+                    return '#ff9900'
+                case 'XOne':
+                    return '#ffccff'
+            }
+            
+            
+        }
+
 
         d3.treemap()
           .size([width,height])
@@ -56,7 +104,11 @@
               .attr('width', d => d.x1-d.x0)
               .attr('height', d => d.y1-d.y0)
               .style('stroke','black')
-              .style('fill','slateblue')
+              .style('fill',d=>fillfunction(d))
+              .attr("class","tile")
+              .attr("data-name",d=>d.data.name)
+              .attr("data-category",d=>d.data.category)
+              .attr("data-value",d=>d.data.value)
 
             svg
                 .selectAll("text")
