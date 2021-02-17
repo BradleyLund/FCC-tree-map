@@ -57,11 +57,11 @@
 
         var root = d3.hierarchy(data).sum(function(d){return d.value})
        
-        console.log(root)
+
 
         const fillfunction = (d) => {
             //do a where clause for the different sections and return the different colors
-            console.log(d.data.category)
+
             switch (d.data.category) {
                 case '2600':
                     return '#b03333'
@@ -140,6 +140,8 @@
                         
               })
 
+              
+
             svg
                 .selectAll("text")
                 .data(root.leaves())
@@ -149,19 +151,33 @@
                   .attr("y", d=>d.y0+20)
                   .text(d=>d.data.name)
                   .attr("font-size","15px")
-                  .attr("fill","white")
+                  .attr("fill","white");
 
-            dataLegend = [{temp:5},{temp:15},{temp:25},{temp:35},{temp:45},{temp:55}]
+            
+              let legendData = root.leaves()
+
+              let dataSet = []
+
+              for (let i =0; i<legendData.length;i++) {
+                //   console.log(legendData)
+                  dataSet.push(legendData[i].data.category)
+              }
+
+              const mySet = new Set(dataSet)
+
+            
+            
            
-          svg.append('g')
+          body.append('g')
             .attr('id','legend')
             .selectAll('rect')
-            .data(dataLegend)
+            .data(mySet)
             .enter()
             .append("rect")
             .attr('x',(d,i)=>100+(i*30))
+            .attr('class','legend-item')
             .attr('y',height-50)
-            .attr('fill',d=>{return color(d.temp)})
+            .style('fill',(d,i)=>{return fillfunction(d[i])})
             .attr('height',30)
             .attr('width',30)
             .attr('stroke','black')
