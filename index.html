@@ -2,7 +2,21 @@
 <meta charset="utf-8">
 <html>
     <head>
-
+        <style>
+            #tooltip {
+                position: absolute;			
+                text-align: center;			
+                width: 60px;					
+                height: 28px;					
+                padding: 2px;				
+                font: 12px sans-serif;		
+                background: lightsteelblue;	
+                border: 0px;		
+                border-radius: 8px;			
+                pointer-events: none;
+                opacity: 1;	
+            }
+        </style>
     </head>
 
     <body>
@@ -19,13 +33,7 @@
     
 
     
-    var tooltip = d3.select('body').append('div')
-    .attr("id", "tooltip")
-    .style("opacity",0)
 
-    d3.select('body').append('div')
-      .attr('id','tooltip')
-      .attr('style','position:absolute; opacity: 0;')
 
     var margin = {top: 10, right:10,bottom:10,left: 10},
         width =1400 -margin.left - margin.right,
@@ -43,22 +51,11 @@
         .append('g')
 
 
-    // var tooltip = d3.select('body').append('div')
-    //     .attr("id", "tooltip")
-    //     .style("opacity",0)
 
-    var body = d3.select('body');
+    var div = d3.select("body").append("div")
+        .attr("id","tooltip")
+        .style("opacity",0)
 
-    var tooltip = body
-        .append("g")
-        .append('div')
-        .attr('class', 'tooltip')
-        .attr('id', 'tooltip')
-        .style('opacity', 0);
-
-    // d3.select('body').append('div')
-    //   .attr('id','tooltip')
-    //   .attr('style','position:absolute; opacity: 0;')
 
     d3.json("https://cdn.freecodecamp.org/testable-projects-fcc/data/tree_map/video-game-sales-data.json",function(data) {
 
@@ -132,18 +129,20 @@
               .attr("data-name",d=>d.data.name)
               .attr("data-category",d=>d.data.category)
               .attr("data-value",d=>d.data.value)
-              .on('mouseover',function(d,i) {
-                    tooltip.transition()
-                    .style('opacity',1)
-                    .attr("data-value", d.data.value)
-                    .html("helloooooo")
-                    .style('left', d3.event.pageX + 10 + 'px')
-                    .style('top',d3.event.pageY - 28 + 'px');
+              .on('mouseover',function(d) {
+                div.transition()		
+                    .duration(200)		
+                    .style("opacity", .9);		
+                div	.html("hello")	
+                    .style("left", (d3.event.pageX) + "px")		
+                    .style("top", (d3.event.pageY - 28) + "px")
+                    .attr("data-value",d.data.value);	
                     
               })
               .on('mouseout',d=> {
-                tooltip.transition()
-                .style('opacity',0)
+                div.transition()		
+                .duration(500)		
+                .style("opacity", 0);	
                         
               })
 
